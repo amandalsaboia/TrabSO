@@ -6,33 +6,34 @@ import java.util.concurrent.Semaphore;
 
 public class Buteco {
 
-	private int numcadeiras;
-	private Semaphore cadeiras;
-	private Semaphore mutex = new Semaphore(1);
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
+	private Semaphore n;
 
-	public Buteco(int numcadeiras) {
-		cadeiras = new Semaphore(numcadeiras);
-		this.numcadeiras = numcadeiras;
+	public Buteco(int n) {
+		this.n = new Semaphore(n);
 	}
 
 	public void addCliente(long tempoBebendo, long tempoEmCasa) {
-		clientes.add(new Bebinho(this, tempoBebendo, tempoEmCasa));
+		Bebinho b = new Bebinho(this, tempoBebendo, tempoEmCasa, n);
+		clientes.add(b);
+		b.start();
+	}
+	
+	public void removeCliente(Bebinho b){
+		clientes.remove(b);
+		b.expulsa();
 	}
 
-	public void entrarButeco(Bebinho b) {
-
+	
+	// TODO se um cliente chega e todas as cadeiras estiverem ocupadas, 
+	// significa que todos os clientes sentados estão jantando juntos e o 
+	// cliente que chegou deverá esperar (bloqueado) até que todas as 
+	// cadeiras sejam desocupadas para só então se sentar.
+	public void entrarButeco(Bebinho b) throws Exception {
+		b.beber();
 	}
 
-	private void entrarFila(Bebinho b) {
-
-	}
-
-	private void sentarCadeira(Bebinho b) {
-
-	}
-
-	public void sairButeco(Bebinho b) {
-
+	public void sairButeco(Bebinho b) throws Exception {
+		b.irPraCasa();
 	}
 }
