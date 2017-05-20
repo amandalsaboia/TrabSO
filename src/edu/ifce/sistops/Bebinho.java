@@ -10,6 +10,8 @@ public class Bebinho extends Thread {
 	private String id;
 	private boolean expulso;
 	private Semaphore n;
+	
+	
 
 	public Bebinho(Buteco buteco, long tempoBebendo, long tempoEmCasa, Semaphore n) {
 		this.id = this.toString();

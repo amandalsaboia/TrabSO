@@ -1,17 +1,41 @@
 package edu.ifce.sistops;
 
+import java.awt.Graphics2D;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class Buteco {
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class Buteco extends JPanel {
 
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
 	private Semaphore n;
+	private static final long     serialVersionUID = -7065575459579164850L;
 
-	public Buteco(int n) {
+	public Buteco(int n) throws Exception{
+		setLayout(null);
+		int N=0;
+		String s=JOptionPane.showInputDialog("Informe o número de cadeiras");
+		try{
+			N=Integer.parseInt(s);
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(this, "Quantidade inválida");
+		}
 		this.n = new Semaphore(n);
+		
+		JButton addCliente = new JButton("Adicionar cliente");
 	}
+	 @Override
+	  public void paint(Graphics2D g2) {
+	    super.paint(g2);
+	    g2.drawString(nme + " #" + getId(), x, y - 15);
+	    g2.drawString(status + " " + "[" + (numAtendimentos) + "]", x, y);
+
+	  }
 
 	public void addCliente(long tempoBebendo, long tempoEmCasa) {
 		Bebinho b = new Bebinho(this, tempoBebendo, tempoEmCasa, n);
@@ -26,9 +50,9 @@ public class Buteco {
 
 	
 	// TODO se um cliente chega e todas as cadeiras estiverem ocupadas, 
-	// significa que todos os clientes sentados estão jantando juntos e o 
-	// cliente que chegou deverá esperar (bloqueado) até que todas as 
-	// cadeiras sejam desocupadas para só então se sentar.
+	// significa que todos os clientes sentados estaÌƒo jantando juntos e o 
+	// cliente que chegou deveraÌ� esperar (bloqueado) ateÌ� que todas as 
+	// cadeiras sejam desocupadas para soÌ� entaÌƒo se sentar.
 	public void entrarButeco(Bebinho b) throws Exception {
 		b.beber();
 	}
