@@ -1,5 +1,6 @@
 package edu.ifce.sistops;
 
+import java.awt.Graphics2D;
 import java.util.concurrent.Semaphore;
 
 public class Bebinho extends Thread {
@@ -47,6 +48,7 @@ public class Bebinho extends Thread {
 		} else if (situacao == SituacaoBebinho.EM_CASA) {
 			stepCasa();
 		}
+		buteco.repaint();
 	}
 
 	private void stepBar() throws Exception {
@@ -80,5 +82,8 @@ public class Bebinho extends Thread {
 	public void expulsa() {
 		expulso = true;
 		this.interrupt();
+	}
+
+	public void paint(Graphics2D g2) {
 	}
 }

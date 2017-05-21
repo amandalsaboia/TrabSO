@@ -1,75 +1,111 @@
 package edu.ifce.sistops;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Buteco extends JPanel {
 
+	private static final long serialVersionUID = -7065575459579164850L;
+
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
-	private Semaphore n;
-	private static final long     serialVersionUID = -7065575459579164850L;
+	private int numbebinhos = 0;
+	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
 
-	public Buteco(int n) throws Exception{
+	public Buteco() throws Exception {
 		setLayout(null);
-		int N=0;
-		String s=JOptionPane.showInputDialog("Informe o número de cadeiras");
-		try{
-			N=Integer.parseInt(s);
-		}catch(Exception e){
-			JOptionPane.showMessageDialog(this, "Quantidade inválida");
-		}
-		this.n = new Semaphore(n);
-		
-		JButton addCliente = new JButton("Adicionar cliente");
-	}
-	 @Override
-	  public void paint(Graphics2D g2) {
-	    super.paint(g2);
-	    g2.drawString(nme + " #" + getId(), x, y - 15);
-	    g2.drawString(status + " " + "[" + (numAtendimentos) + "]", x, y);
+		setSize(800, 600);
+		String s = JOptionPane.showInputDialog("Informe o número de cadeiras");
+		int num = Integer.parseInt(s);
+		this.n = new Semaphore(num);
 
-	  }
-	 @Override
-	  protected void paintComponent(Graphics g) {
-	    g.clearRect(0, 0, 640, 480);
-	    Graphics2D g2 = (Graphics2D) g;
-	    for (SituacaoBebinho pc : caixasDesenho) {
-	      pc.paint(g2);
-	    }
-	    clientes.removeAll(clientesRemover);
-	    clientesRemover.removeAll(clientesRemover);
-	    for (ProcessoCliente pc : clientes) {
-	      pc.paint(g2);
-	    }
+		JFrame jf = new JFrame("O bar tem [ " + num + " ] cadeiras");
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setLayout(new BorderLayout(5, 5));
+		jf.add(this, BorderLayout.CENTER);
+		jf.setSize(800, 650);
+
+		JPanel jp2 = new JPanel();
+		jp2.setLayout(new FlowLayout());
+		jf.add(jp2, BorderLayout.NORTH);
+
+		JLabel label = new JLabel("Tempo no bar");
+		jp2.add(label);
+
+		final JTextField tfBar = new JTextField(10);
+		jp2.add(tfBar);
+
+		label = new JLabel("Tempo em casa");
+		jp2.add(label);
+
+		final JTextField tfCasa = new JTextField(10);
+		jp2.add(tfCasa);
+
+		JButton bt = new JButton("Adicionar");
+		jp2.add(bt);
+
+		bt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				long tempoBebendo = Long.parseLong(tfBar.getText());
+				long tempoEmCasa = Long.parseLong(tfCasa.getText());
+				Buteco.this.addCliente(tempoBebendo, tempoEmCasa);
+			}
+		});
+
+		jf.setVisible(true);
+
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		g.clearRect(0, 0, 800, 600);
+		Graphics2D g2 = (Graphics2D) g;
+		g.drawString("tem " + numbebinhos + " bebendo", 10, 10);
+		for (Bebinho b : clientes) {
+			b.paint(g2);
+		}
+	}
 
 	public void addCliente(long tempoBebendo, long tempoEmCasa) {
 		Bebinho b = new Bebinho(this, tempoBebendo, tempoEmCasa, n);
 		clientes.add(b);
 		b.start();
 	}
-	
-	public void removeCliente(Bebinho b){
+
+	public void removeCliente(Bebinho b) {
 		clientes.remove(b);
 		b.expulsa();
 	}
 
-	
-	// TODO se um cliente chega e todas as cadeiras estiverem ocupadas, 
-	// significa que todos os clientes sentados estaÌƒo jantando juntos e o 
-	// cliente que chegou deveraÌ� esperar (bloqueado) ateÌ� que todas as 
-	// cadeiras sejam desocupadas para soÌ� entaÌƒo se sentar.
+	// TODO se um cliente chega e todas as cadeiras estiverem ocupadas,
+	// significa que todos os clientes sentados estaÌƒo jantando juntos e o
+	// cliente que chegou devera esperar (bloqueado) ate que todas as
+	// cadeiras sejam desocupadas para so entao se sentar.
 	public void entrarButeco(Bebinho b) throws Exception {
+		mutex.acquire();
 		b.beber();
+		numbebinhos++;
+		mutex.release();
 	}
 
 	public void sairButeco(Bebinho b) throws Exception {
+		mutex.acquire();
 		b.irPraCasa();
+		numbebinhos--;
+		mutex.release();
 	}
 }
