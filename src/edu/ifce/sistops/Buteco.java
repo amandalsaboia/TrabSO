@@ -36,6 +36,18 @@ public class Buteco extends JPanel {
 	    g2.drawString(status + " " + "[" + (numAtendimentos) + "]", x, y);
 
 	  }
+	 @Override
+	  protected void paintComponent(Graphics g) {
+	    g.clearRect(0, 0, 640, 480);
+	    Graphics2D g2 = (Graphics2D) g;
+	    for (SituacaoBebinho pc : caixasDesenho) {
+	      pc.paint(g2);
+	    }
+	    clientes.removeAll(clientesRemover);
+	    clientesRemover.removeAll(clientesRemover);
+	    for (ProcessoCliente pc : clientes) {
+	      pc.paint(g2);
+	    }
 
 	public void addCliente(long tempoBebendo, long tempoEmCasa) {
 		Bebinho b = new Bebinho(this, tempoBebendo, tempoEmCasa, n);
