@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Buteco extends JPanel {
@@ -23,6 +25,7 @@ public class Buteco extends JPanel {
 
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
 	private int numbebinhos = 0;
+	private JTextArea jta = new JTextArea();
 	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
 
 	public Buteco() throws Exception {
@@ -56,6 +59,16 @@ public class Buteco extends JPanel {
 
 		JButton bt = new JButton("Adicionar");
 		jp2.add(bt);
+		//botão log
+		 JFrame jf1= new JFrame();
+		 jf1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		 JScrollPane scroll=new JScrollPane(jta);
+		 jf1.add(scroll);
+		 jf1.setSize(800, 480);
+		 final JLabel la=new JLabel("Log de atividades");
+		 jf1.getContentPane().add(la);
+		 JButton log=new JButton("Ver Log");
+		 add(log);
 
 		bt.addActionListener(new ActionListener() {
 			@Override
@@ -69,6 +82,8 @@ public class Buteco extends JPanel {
 		jf.setVisible(true);
 
 	}
+
+
 
 	@Override
 	protected void paintComponent(Graphics g) {
