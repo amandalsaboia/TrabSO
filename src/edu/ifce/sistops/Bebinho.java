@@ -25,7 +25,7 @@ public class Bebinho extends Thread {
 	@Override
 	public void run() {
 		try {
-			System.out.println(id + " acabou de chegar no bar");
+			buteco.log(id + " acabou de chegar no bar");
 			n.acquire();
 			buteco.entrarButeco(this);
 			t1 = System.currentTimeMillis();
@@ -52,18 +52,18 @@ public class Bebinho extends Thread {
 	}
 
 	private void stepBar() throws Exception {
-		System.out.println(id + " está bebendo");
+		buteco.log(id + " está bebendo");
 		if (tempoCorrido >= tb) {
-			System.out.println(id + "quer ir pra casa pois não consegue mais beber");
+			buteco.log(id + "quer ir pra casa pois não consegue mais beber");
 			n.release();
 			buteco.sairButeco(this);
 		}
 	}
 
 	private void stepCasa() throws Exception {
-		System.out.println(id + " está em casa");
+		buteco.log(id + " está em casa");
 		if (tempoCorrido >= tc) {
-			System.out.println(id + " quer uma cadeira pra poder beber");
+			buteco.log(id + " quer uma cadeira pra poder beber");
 			n.acquire();
 			buteco.entrarButeco(this);
 		}
@@ -85,5 +85,6 @@ public class Bebinho extends Thread {
 	}
 
 	public void paint(Graphics2D g2) {
+		
 	}
 }

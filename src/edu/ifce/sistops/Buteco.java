@@ -18,12 +18,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.DefaultCaret;
 
 public class Buteco extends JPanel {
 
 	private static final long serialVersionUID = -7065575459579164850L;
 
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
+	private List<String> logMensagens = new LinkedList<String>();
 	private int numbebinhos = 0;
 	private JTextArea jta = new JTextArea();
 	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
@@ -31,7 +33,7 @@ public class Buteco extends JPanel {
 	public Buteco() throws Exception {
 		setLayout(null);
 		setSize(800, 600);
-		String s = JOptionPane.showInputDialog("Informe o número de cadeiras");
+		String s = JOptionPane.showInputDialog("Informe o numero de cadeiras");
 		int num = Integer.parseInt(s);
 		this.n = new Semaphore(num);
 
@@ -59,10 +61,12 @@ public class Buteco extends JPanel {
 
 		JButton bt = new JButton("Adicionar");
 		jp2.add(bt);
-		//botão log
+		//bota	o log
 		 JFrame jf1= new JFrame("Log de Atividades");
 		 jf1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		 JScrollPane scroll=new JScrollPane(jta);
+		 DefaultCaret caret = (DefaultCaret)jta.getCaret();
+		 caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
 		 jf1.add(scroll);
 		 jf1.setSize(800, 480);
 		 JButton log=new JButton("Ver Log");
@@ -128,5 +132,15 @@ public class Buteco extends JPanel {
 		b.irPraCasa();
 		numbebinhos--;
 		mutex.release();
+	}
+
+	public void log(String string) {
+		logMensagens.add(string);
+		if(logMensagens.size()>1000){
+			while(logMensagens.size()>1000)
+				logMensagens.remove(0);
+			jta.setText("");
+		}
+		jta.append("\n"+string);
 	}
 }
