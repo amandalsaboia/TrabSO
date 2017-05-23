@@ -31,7 +31,7 @@ public class Buteco extends JPanel {
 	public Buteco() throws Exception {
 		setLayout(null);
 		setSize(800, 600);
-		String s = JOptionPane.showInputDialog("Informe o nÃºmero de cadeiras");
+		String s = JOptionPane.showInputDialog("Informe o número de cadeiras");
 		int num = Integer.parseInt(s);
 		this.n = new Semaphore(num);
 
@@ -60,15 +60,21 @@ public class Buteco extends JPanel {
 		JButton bt = new JButton("Adicionar");
 		jp2.add(bt);
 		//botão log
-		 JFrame jf1= new JFrame();
+		 JFrame jf1= new JFrame("Log de Atividades");
 		 jf1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		 JScrollPane scroll=new JScrollPane(jta);
 		 jf1.add(scroll);
 		 jf1.setSize(800, 480);
-		 final JLabel la=new JLabel("Log de atividades");
-		 jf1.getContentPane().add(la);
 		 JButton log=new JButton("Ver Log");
 		 add(log);
+		 log.setBounds(140, 440, 230, 30);
+		 log.addActionListener(new ActionListener(){
+			 @Override
+			 public void actionPerformed(ActionEvent e) {
+			        jf1.setVisible(true);
+			      }
+			    });
+		 
 
 		bt.addActionListener(new ActionListener() {
 			@Override
