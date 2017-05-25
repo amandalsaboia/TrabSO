@@ -146,6 +146,12 @@ public class Buteco extends JPanel {
 		numbebinhos--;
 		mutex.release();
 	}
+	public void entrarFila(Bebinho b)throws Exception{
+		mutex.acquire();
+		b.espera();
+		numbebinhos--;
+		mutex.release();
+	}
 
 	public void log(String string) {
 		logMensagens.add(string);

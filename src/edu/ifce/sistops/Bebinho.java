@@ -91,6 +91,7 @@ public class Bebinho extends Thread {
 			buteco.log(id + " entrou na fila para entrar no bar.");
 			situacao = SituacaoBebinho.NA_FILA;
 			n.acquire();
+			buteco.entrarFila(this);
 			if (situacao == SituacaoBebinho.NA_FILA){
 				buteco.log(id + " saiu da fila\n" + id + " entrou no bar.");
 				impresso_casa = false;
@@ -122,6 +123,7 @@ public class Bebinho extends Thread {
 		tempoCorrido = 0;
 		situacao = SituacaoBebinho.EM_CASA;
 	}
+	
 
 	public void expulsa() {
 		expulso = true;
@@ -136,6 +138,6 @@ public class Bebinho extends Thread {
 		else if (situacao == SituacaoBebinho.NA_FILA)
 			a += 200;
 		g2.drawImage(frames[currframe], a, b, null);
-		g2.drawString("#" + i + id +" " + situacao.toString(), a - 20, b);
+		g2.drawString("#" + id +" " + situacao.toString(), a - 20, b);
 	}
 }
