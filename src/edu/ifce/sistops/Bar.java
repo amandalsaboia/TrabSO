@@ -21,11 +21,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.DefaultCaret;
 
-public class Buteco extends JPanel {
+public class Bar extends JPanel {
 
 	private static final long serialVersionUID = -7065575459579164850L;
 
-	private List<Bebinho> clientes = new LinkedList<Bebinho>();
+	private List<Cliente> clientes = new LinkedList<Cliente>();
 	private List<String> logMensagens = new LinkedList<String>();
 	private BufferedImage mesa;
 	private int x,y;
@@ -33,7 +33,7 @@ public class Buteco extends JPanel {
 	private JTextArea jta = new JTextArea();
 	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
 
-	public Buteco() throws Exception {
+	public Bar() throws Exception {
 		setLayout(null);
 		setSize(800, 600);
 		String s = JOptionPane.showInputDialog("Informe o numero de cadeiras");
@@ -92,7 +92,7 @@ public class Buteco extends JPanel {
 				long id_cliente=Long.parseLong(idd.getText());
 				long tempoBebendo = Long.parseLong(tfBar.getText());
 				long tempoEmCasa = Long.parseLong(tfCasa.getText());
-				Buteco.this.addCliente(id_cliente,tempoBebendo, tempoEmCasa);
+				Bar.this.addCliente(id_cliente,tempoBebendo, tempoEmCasa);
 			}
 		});
 
@@ -112,19 +112,19 @@ public class Buteco extends JPanel {
 		int i = clientes.size();
 		int j = 0;
 		while (i-- > 0) {
-			Bebinho b = clientes.get(i);
+			Cliente b = clientes.get(i);
 			b.paint(g2, i, j++);
 			if(j > 3) j = 0;
 		}
 	}
 
 	public void addCliente(long id_cliente,long tempoBebendo, long tempoEmCasa) {
-		Bebinho b = new Bebinho(this,id_cliente, tempoBebendo, tempoEmCasa, n);
+		Cliente b = new Cliente(this,id_cliente, tempoBebendo, tempoEmCasa, n);
 		clientes.add(b);
 		b.start();
 	}
 
-	public void removeCliente(Bebinho b) {
+	public void removeCliente(Cliente b) {
 		clientes.remove(b);
 		b.expulsa();
 	}
@@ -133,25 +133,20 @@ public class Buteco extends JPanel {
 	// significa que todos os clientes sentados estaÌƒo jantando juntos e o
 	// cliente que chegou devera esperar (bloqueado) ate que todas as
 	// cadeiras sejam desocupadas para so entao se sentar.
-	public void entrarButeco(Bebinho b) throws Exception {
+	public void entrarButeco(Cliente b) throws Exception {
 		mutex.acquire();
 		b.beber();
 		numbebinhos++;
 		mutex.release();
 	}
 
-	public void sairButeco(Bebinho b) throws Exception {
+	public void sairButeco(Cliente b) throws Exception {
 		mutex.acquire();
 		b.irPraCasa();
 		numbebinhos--;
 		mutex.release();
 	}
-	public void entrarFila(Bebinho b)throws Exception{
-		mutex.acquire();
-		b.espera();
-		numbebinhos--;
-		mutex.release();
-	}
+	
 
 	public void log(String string) {
 		logMensagens.add(string);

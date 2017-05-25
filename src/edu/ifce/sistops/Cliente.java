@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.concurrent.Semaphore;
 
-public class Bebinho extends Thread {
+public class Cliente extends Thread {
 
 	private long t1, t2, tb, tc, tempoCorrido = 0;
 	private SituacaoBebinho situacao = SituacaoBebinho.NO_BAR;
-	private Buteco buteco;
+	private Bar buteco;
 	private long id;
 	private boolean expulso;
 	private boolean impresso_bar = false,impresso_casa = false;
@@ -26,7 +26,7 @@ public class Bebinho extends Thread {
 		}
 	}
 
-	public Bebinho(Buteco buteco,long id_cliente, long tempoBebendo, long tempoEmCasa, Semaphore n) {
+	public Cliente(Bar buteco,long id_cliente, long tempoBebendo, long tempoEmCasa, Semaphore n) {
 		this.id = id_cliente;
 		this.tb = tempoBebendo;
 		this.tc = tempoEmCasa;
@@ -91,7 +91,6 @@ public class Bebinho extends Thread {
 			buteco.log(id + " entrou na fila para entrar no bar.");
 			situacao = SituacaoBebinho.NA_FILA;
 			n.acquire();
-			buteco.entrarFila(this);
 			if (situacao == SituacaoBebinho.NA_FILA){
 				buteco.log(id + " saiu da fila\n" + id + " entrou no bar.");
 				impresso_casa = false;
