@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -28,18 +27,12 @@ public class Buteco extends JPanel {
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
 	private List<String> logMensagens = new LinkedList<String>();
 	private int numbebinhos = 0;
-	private int x,y;
 	private JTextArea jta = new JTextArea();
-	 private BufferedImage    sprite;
-	private BufferedImage ch0,ch1,ch2,ch3,ch4,ch5,ch6,ch7,ch8,ch9,ch10,ch11;
-	private BufferedImage       frames[];
 	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
 
 	public Buteco() throws Exception {
 		setLayout(null);
 		setSize(800, 600);
-		this.x=x;
-		this.y=y;
 		String s = JOptionPane.showInputDialog("Informe o numero de cadeiras");
 		int num = Integer.parseInt(s);
 		this.n = new Semaphore(num);
@@ -68,24 +61,23 @@ public class Buteco extends JPanel {
 
 		JButton bt = new JButton("Adicionar Cliente");
 		jp2.add(bt);
-		//bota	o log
-		 JFrame jf1= new JFrame("Log de Atividades");
-		 jf1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		 JScrollPane scroll=new JScrollPane(jta);
-		 DefaultCaret caret = (DefaultCaret)jta.getCaret();
-		 caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
-		 jf1.add(scroll);
-		 jf1.setSize(800, 480);
-		 JButton log=new JButton("Ver Log");
-		 add(log);
-		 log.setBounds(140, 440, 230, 30);
-		 log.addActionListener(new ActionListener(){
-			 @Override
-			 public void actionPerformed(ActionEvent e) {
-			        jf1.setVisible(true);
-			      }
-			    });
-		 
+		// bota o log
+		JFrame jf1 = new JFrame("Log de Atividades");
+		jf1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		JScrollPane scroll = new JScrollPane(jta);
+		DefaultCaret caret = (DefaultCaret) jta.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
+		jf1.add(scroll);
+		jf1.setSize(800, 480);
+		JButton log = new JButton("Ver Log");
+		add(log);
+		log.setBounds(140, 440, 230, 30);
+		log.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jf1.setVisible(true);
+			}
+		});
 
 		bt.addActionListener(new ActionListener() {
 			@Override
@@ -97,31 +89,19 @@ public class Buteco extends JPanel {
 		});
 
 		jf.setVisible(true);
-		ch0=Loader.INSTANCE.assetImg("boneco0.png");
-		ch1=Loader.INSTANCE.assetImg("boneco2.png");
-		ch2=Loader.INSTANCE.assetImg("boneco3.png");
-		ch3=Loader.INSTANCE.assetImg("boneco4.png");
-		ch4=Loader.INSTANCE.assetImg("boneco5.png");
-		ch5=Loader.INSTANCE.assetImg("boneco6.png");
-		ch6=Loader.INSTANCE.assetImg("boneco7.png");
-		ch7=Loader.INSTANCE.assetImg("boneco8.png");
-		ch8=Loader.INSTANCE.assetImg("boneco9.png");
-		ch9=Loader.INSTANCE.assetImg("boneco10.png");
-		frames=new BufferedImage[] {ch0,ch1,ch2,ch3,ch4,ch5,ch6,ch7,ch8,ch9,ch10};
-		sprite=ch1;
-
 	}
-
-
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.clearRect(0, 0, 800, 600);
 		Graphics2D g2 = (Graphics2D) g;
 		g.drawString("tem " + numbebinhos + " bebendo", 10, 10);
-		g2.drawImage(sprite,x,y,null);
-		for (Bebinho b : clientes) {
-			b.paint(g2);
+		int i = clientes.size();
+		int j = 0;
+		while (i-- > 0) {
+			Bebinho b = clientes.get(i);
+			b.paint(g2, i, j++);
+			if(j > 3) j = 0;
 		}
 	}
 
@@ -156,11 +136,11 @@ public class Buteco extends JPanel {
 
 	public void log(String string) {
 		logMensagens.add(string);
-		if(logMensagens.size()>1000){
-			while(logMensagens.size()>1000)
+		if (logMensagens.size() > 1000) {
+			while (logMensagens.size() > 1000)
 				logMensagens.remove(0);
 			jta.setText("");
 		}
-		jta.append("\n"+string);
+		jta.append("\n" + string);
 	}
 }

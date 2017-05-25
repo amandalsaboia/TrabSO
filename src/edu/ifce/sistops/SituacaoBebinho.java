@@ -1,5 +1,5 @@
 package edu.ifce.sistops;
 
 public enum SituacaoBebinho {
-	NO_BAR,EM_CASA
+	NO_BAR,EM_CASA,NA_FILA
 }
