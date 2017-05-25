@@ -52,16 +52,16 @@ public class Bebinho extends Thread {
 	}
 
 	private void stepBar() throws Exception {
-		buteco.log(id + " estÃ¡ bebendo");
+		buteco.log(id + " estão bebendo");
 		if (tempoCorrido >= tb) {
-			buteco.log(id + "quer ir pra casa pois nÃ£o consegue mais beber");
+			buteco.log(id + "quer ir pra casa pois não consegue mais beber");
 			n.release();
 			buteco.sairButeco(this);
 		}
 	}
 
 	private void stepCasa() throws Exception {
-		buteco.log(id + " estÃ¡ em casa");
+		buteco.log(id + " estão em casa");
 		if (tempoCorrido >= tc) {
 			buteco.log(id + " quer uma cadeira pra poder beber");
 			n.acquire();
@@ -83,7 +83,8 @@ public class Bebinho extends Thread {
 		expulso = true;
 		this.interrupt();
 	}
-
+	
+  
 	public void paint(Graphics2D g2) {
 		
 	}
