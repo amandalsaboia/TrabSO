@@ -11,6 +11,7 @@ public class Bebinho extends Thread {
 	private Buteco buteco;
 	private long id;
 	private boolean expulso;
+	private boolean impresso_bar = false,impresso_casa = false;
 	private Semaphore n;
 	private static Image[] frames = new Image[13];
 	private int currframe = 0;
@@ -66,15 +67,43 @@ public class Bebinho extends Thread {
 	}
 
 	private void stepBar() throws Exception {
-		buteco.log(id + " esta bebendo");
-		if (tempoCorrido >= tb) {
-			buteco.log(id + "quer ir pra casa pois nao consegue mais beber");
-			n.release();
-			buteco.sairButeco(this);
+			if (impresso_bar == false){
+				buteco.log(id + " esta bebendo por " + tb + " segundos.");
+				impresso_bar = true;
+				impresso_casa = false;
+			}
+			if (tempoCorrido >= tb) {
+				buteco.log(id + " quer ir pra casa pois nao consegue mais beber");
+				n.release();
+				buteco.sairButeco(this);
+				buteco.log(id + " saiu do bar..");
+			}
+		}
+
+	private void stepCasa() throws Exception {
+		if (impresso_casa == false){
+			buteco.log(id + " esta em casa por " + tc + " segundos.");
+			impresso_casa = true;
+			impresso_bar = false;
+		}
+		if (tempoCorrido >= tc) {
+			buteco.log(id + " quer uma cadeira pra poder beber");
+			buteco.log(id + " entrou na fila para entrar no bar.");
+			situacao = SituacaoBebinho.NA_FILA;
+			n.acquire();
+			if (situacao == SituacaoBebinho.NA_FILA){
+				buteco.log(id + " saiu da fila\n" + id + " entrou no bar.");
+				impresso_casa = false;
+				impresso_bar = false;
+			}
+			buteco.entrarButeco(this);
 		}
 	}
 
-	private void stepCasa() throws Exception {
+
+
+
+	/*private void stepCasa() throws Exception {
 		buteco.log(id + " esta em casa");
 		if (tempoCorrido >= tc) {
 			buteco.log(id + " quer uma cadeira pra poder beber");
@@ -82,7 +111,7 @@ public class Bebinho extends Thread {
 			n.acquire();
 			buteco.entrarButeco(this);
 		}
-	}
+	}*/
 
 	public void beber() {
 		tempoCorrido = 0;
