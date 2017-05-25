@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -26,6 +27,8 @@ public class Buteco extends JPanel {
 
 	private List<Bebinho> clientes = new LinkedList<Bebinho>();
 	private List<String> logMensagens = new LinkedList<String>();
+	private BufferedImage mesa,spr;
+	private int x,y;
 	private int numbebinhos = 0;
 	private JTextArea jta = new JTextArea();
 	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
@@ -89,12 +92,17 @@ public class Buteco extends JPanel {
 		});
 
 		jf.setVisible(true);
+		mesa=Loader.INSTANCE.assetImg("table.png");
+		spr=mesa;
+		x=50;
+		y=50;
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.clearRect(0, 0, 800, 600);
 		Graphics2D g2 = (Graphics2D) g;
+		g.drawImage(spr,x,y,null);
 		g.drawString("tem " + numbebinhos + " bebendo", 10, 10);
 		int i = clientes.size();
 		int j = 0;
