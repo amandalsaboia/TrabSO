@@ -9,7 +9,7 @@ public class Bebinho extends Thread {
 	private long t1, t2, tb, tc, tempoCorrido = 0;
 	private SituacaoBebinho situacao = SituacaoBebinho.NO_BAR;
 	private Buteco buteco;
-	private String id;
+	private long id;
 	private boolean expulso;
 	private Semaphore n;
 	private static Image[] frames = new Image[13];
@@ -25,8 +25,8 @@ public class Bebinho extends Thread {
 		}
 	}
 
-	public Bebinho(Buteco buteco, long tempoBebendo, long tempoEmCasa, Semaphore n) {
-		this.id = this.toString();
+	public Bebinho(Buteco buteco,long id_cliente, long tempoBebendo, long tempoEmCasa, Semaphore n) {
+		this.id = id_cliente;
 		this.tb = tempoBebendo;
 		this.tc = tempoEmCasa;
 		this.buteco = buteco;
@@ -107,6 +107,6 @@ public class Bebinho extends Thread {
 		else if (situacao == SituacaoBebinho.NA_FILA)
 			a += 200;
 		g2.drawImage(frames[currframe], a, b, null);
-		g2.drawString("#" + i + " " + situacao.toString(), a - 20, b);
+		g2.drawString("#" + i + id +" " + situacao.toString(), a - 20, b);
 	}
 }

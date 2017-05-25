@@ -49,6 +49,10 @@ public class Buteco extends JPanel {
 		JPanel jp2 = new JPanel();
 		jp2.setLayout(new FlowLayout());
 		jf.add(jp2, BorderLayout.NORTH);
+        JLabel label1=new JLabel("ID");
+        jp2.add(label1);
+        final JTextField idd=new JTextField(10);
+        jp2.add(idd);
 
 		JLabel label = new JLabel("Tempo no bar");
 		jp2.add(label);
@@ -85,9 +89,10 @@ public class Buteco extends JPanel {
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				long id_cliente=Long.parseLong(idd.getText());
 				long tempoBebendo = Long.parseLong(tfBar.getText());
 				long tempoEmCasa = Long.parseLong(tfCasa.getText());
-				Buteco.this.addCliente(tempoBebendo, tempoEmCasa);
+				Buteco.this.addCliente(id_cliente,tempoBebendo, tempoEmCasa);
 			}
 		});
 
@@ -113,8 +118,8 @@ public class Buteco extends JPanel {
 		}
 	}
 
-	public void addCliente(long tempoBebendo, long tempoEmCasa) {
-		Bebinho b = new Bebinho(this, tempoBebendo, tempoEmCasa, n);
+	public void addCliente(long id_cliente,long tempoBebendo, long tempoEmCasa) {
+		Bebinho b = new Bebinho(this,id_cliente, tempoBebendo, tempoEmCasa, n);
 		clientes.add(b);
 		b.start();
 	}
