@@ -27,8 +27,8 @@ public class Bar extends JPanel {
 
 	private List<Cliente> clientes = new LinkedList<Cliente>();
 	private List<String> logMensagens = new LinkedList<String>();
-	private BufferedImage mesa;
-	private int x, y, num;
+	private BufferedImage mesa,casa;
+	private int x, y, num,w,z;
 	private int numbebinhos = 0;
 	private JTextArea jta = new JTextArea();
 	private Semaphore mutex = new Semaphore(1), mutmesa, n;
@@ -98,6 +98,10 @@ public class Bar extends JPanel {
 		});
 
 		jf.setVisible(true);
+		casa = Loader.INSTANCE.assetImg("house.jpg");
+        w = 500;
+        z = 50;
+
 		mesa = Loader.INSTANCE.assetImg("table.jpg");
 		x = 110;
 		y = 100;
@@ -109,6 +113,7 @@ public class Bar extends JPanel {
 		g.clearRect(0, 0, 800, 600);
 		Graphics2D g2 = (Graphics2D) g;
 		g.drawImage(mesa, x, y, null);
+		g.drawImage(casa,w,z,null);
 		g.drawString("tem " + numbebinhos +"cliente(s)" + " bebendo", 10, 10);
 		int i = clientes.size();
 		int j = 0;
