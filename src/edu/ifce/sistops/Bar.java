@@ -28,17 +28,18 @@ public class Bar extends JPanel {
 	private List<Cliente> clientes = new LinkedList<Cliente>();
 	private List<String> logMensagens = new LinkedList<String>();
 	private BufferedImage mesa;
-	private int x,y;
+	private int x, y, num;
 	private int numbebinhos = 0;
 	private JTextArea jta = new JTextArea();
-	private Semaphore mutex = new Semaphore(1), n; // numero de cadeiras
-
+	private Semaphore mutex = new Semaphore(1), mutmesa, n;
+	// numero de cadeira
 	public Bar() throws Exception {
 		setLayout(null);
 		setSize(800, 600);
 		String s = JOptionPane.showInputDialog("Informe o numero de cadeiras");
-		int num = Integer.parseInt(s);
+		num = Integer.parseInt(s);
 		this.n = new Semaphore(num);
+		this.mutmesa = new Semaphore(num);
 
 		JFrame jf = new JFrame("O bar tem [ " + num + " ] cadeiras");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,10 +50,10 @@ public class Bar extends JPanel {
 		JPanel jp2 = new JPanel();
 		jp2.setLayout(new FlowLayout());
 		jf.add(jp2, BorderLayout.NORTH);
-        JLabel label1=new JLabel("ID");
-        jp2.add(label1);
-        final JTextField idd=new JTextField(10);
-        jp2.add(idd);
+		JLabel label1 = new JLabel("ID");
+		jp2.add(label1);
+		final JTextField idd = new JTextField(10);
+		jp2.add(idd);
 
 		JLabel label = new JLabel("Tempo no bar");
 		jp2.add(label);
@@ -89,17 +90,17 @@ public class Bar extends JPanel {
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				long id_cliente=Long.parseLong(idd.getText());
+				long id_cliente = Long.parseLong(idd.getText());
 				long tempoBebendo = Long.parseLong(tfBar.getText());
 				long tempoEmCasa = Long.parseLong(tfCasa.getText());
-				Bar.this.addCliente(id_cliente,tempoBebendo, tempoEmCasa);
+				Bar.this.addCliente(id_cliente, tempoBebendo, tempoEmCasa);
 			}
 		});
 
 		jf.setVisible(true);
-		mesa=Loader.INSTANCE.assetImg("table.jpg");
-		x=50;
-		y=50;
+		mesa = Loader.INSTANCE.assetImg("table.jpg");
+		x = 50;
+		y = 50;
 		jf.repaint();
 	}
 
@@ -107,19 +108,20 @@ public class Bar extends JPanel {
 	protected void paintComponent(Graphics g) {
 		g.clearRect(0, 0, 800, 600);
 		Graphics2D g2 = (Graphics2D) g;
-		g.drawImage(mesa,x,y,null);
+		g.drawImage(mesa, x, y, null);
 		g.drawString("tem " + numbebinhos + " bebendo", 10, 10);
 		int i = clientes.size();
 		int j = 0;
 		while (i-- > 0) {
 			Cliente b = clientes.get(i);
 			b.paint(g2, i, j++);
-			if(j > 3) j = 0;
+			if (j > 3)
+				j = 0;
 		}
 	}
 
-	public void addCliente(long id_cliente,long tempoBebendo, long tempoEmCasa) {
-		Cliente b = new Cliente(this,id_cliente, tempoBebendo, tempoEmCasa, n);
+	public void addCliente(long id_cliente, long tempoBebendo, long tempoEmCasa) {
+		Cliente b = new Cliente(this, id_cliente, tempoBebendo, tempoEmCasa, n);
 		clientes.add(b);
 		b.start();
 	}
@@ -137,7 +139,9 @@ public class Bar extends JPanel {
 		mutex.acquire();
 		b.beber();
 		numbebinhos++;
-		mutex.release();
+		mutex.release();			
+		if(numbebinhos<num)
+			mutmesa.acquire();
 	}
 
 	public void sairButeco(Cliente b) throws Exception {
@@ -145,14 +149,19 @@ public class Bar extends JPanel {
 		b.irPraCasa();
 		numbebinhos--;
 		mutex.release();
+		if(numbebinhos==0){
+			int i = num;
+			while(i-->0)
+				mutmesa.release();					
+		}
+			
 	}
-	
 
 	public void log(String string) {
 		logMensagens.add(string);
 		if (logMensagens.size() > 1000) {
 			while (logMensagens.size() > 1000)
-				logMensagens.remove(0);
+				logMensagens.removeAll(logMensagens);
 			jta.setText("");
 		}
 		jta.append("\n" + string);
