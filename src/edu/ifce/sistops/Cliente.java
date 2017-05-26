@@ -10,7 +10,7 @@ public class Cliente extends Thread {
 //	private SituacaoBebinho situacao = SituacaoBebinho.NO_BAR;
 	private SituacaoBebinho situacao = SituacaoBebinho.NA_FILA;//Teste
 	private Bar buteco;
-	private long id;
+	private String id;
 	private boolean expulso;
 	private boolean impresso_bar = false,impresso_casa = false;
 	private Semaphore n;
@@ -27,7 +27,7 @@ public class Cliente extends Thread {
 		}
 	}
 
-	public Cliente(Bar buteco,long id_cliente, long tempoBebendo, long tempoEmCasa, Semaphore n) {
+	public Cliente(Bar buteco,String id_cliente, long tempoBebendo, long tempoEmCasa, Semaphore n) {
 		this.id = id_cliente;
 		this.tb = tempoBebendo;
 		this.tc = tempoEmCasa;
@@ -70,7 +70,7 @@ public class Cliente extends Thread {
 
 	private void stepBar() throws Exception {
 			if (impresso_bar == false){
-				buteco.log(id + " esta bebendo por " + tb + " segundos.");
+				buteco.log(id + " irá beber por " + tb + " segundos.");
 				impresso_bar = true;
 				impresso_casa = false;
 			}
@@ -84,7 +84,7 @@ public class Cliente extends Thread {
 
 	private void stepCasa() throws Exception {
 		if (impresso_casa == false){
-			buteco.log(id + " esta em casa por " + tc + " segundos.");
+			buteco.log(id + " permanecerá em casa por " + tc + " segundos.");
 			impresso_casa = true;
 			impresso_bar = false;
 		}

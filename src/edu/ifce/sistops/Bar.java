@@ -90,7 +90,7 @@ public class Bar extends JPanel {
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				long id_cliente = Long.parseLong(idd.getText());
+				String id_cliente = idd.getText();
 				long tempoBebendo = Long.parseLong(tfBar.getText());
 				long tempoEmCasa = Long.parseLong(tfCasa.getText());
 				Bar.this.addCliente(id_cliente, tempoBebendo, tempoEmCasa);
@@ -125,7 +125,7 @@ public class Bar extends JPanel {
 		}
 	}
 
-	public void addCliente(long id_cliente, long tempoBebendo, long tempoEmCasa) {
+	public void addCliente(String id_cliente, long tempoBebendo, long tempoEmCasa) {
 		Cliente b = new Cliente(this, id_cliente, tempoBebendo, tempoEmCasa, n);
 		clientes.add(b);
 		b.start();
