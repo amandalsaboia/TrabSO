@@ -99,8 +99,8 @@ public class Bar extends JPanel {
 
 		jf.setVisible(true);
 		mesa = Loader.INSTANCE.assetImg("table.jpg");
-		x = 50;
-		y = 50;
+		x = 110;
+		y = 100;
 		jf.repaint();
 	}
 
@@ -109,7 +109,7 @@ public class Bar extends JPanel {
 		g.clearRect(0, 0, 800, 600);
 		Graphics2D g2 = (Graphics2D) g;
 		g.drawImage(mesa, x, y, null);
-		g.drawString("tem " + numbebinhos + " bebendo", 10, 10);
+		g.drawString("tem " + numbebinhos +"cliente(s)" + " bebendo", 10, 10);
 		int i = clientes.size();
 		int j = 0;
 		while (i-- > 0) {
@@ -136,12 +136,18 @@ public class Bar extends JPanel {
 	// cliente que chegou devera esperar (bloqueado) ate que todas as
 	// cadeiras sejam desocupadas para so entao se sentar.
 	public void entrarButeco(Cliente b) throws Exception {
+//		mutex.acquire();
+//		b.beber();
+//		numbebinhos++;
+//		mutex.release();			
+//		if(numbebinhos<num)
+//			mutmesa.acquire();
+		mutmesa.acquire();
 		mutex.acquire();
 		b.beber();
 		numbebinhos++;
-		mutex.release();			
-		if(numbebinhos<num)
-			mutmesa.acquire();
+		mutex.release();	
+		
 	}
 
 	public void sairButeco(Cliente b) throws Exception {
@@ -154,7 +160,7 @@ public class Bar extends JPanel {
 			while(i-->0)
 				mutmesa.release();					
 		}
-			
+		
 	}
 
 	public void log(String string) {

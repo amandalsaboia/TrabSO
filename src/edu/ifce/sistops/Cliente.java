@@ -7,7 +7,8 @@ import java.util.concurrent.Semaphore;
 public class Cliente extends Thread {
 
 	private long t1, t2, tb, tc, tempoCorrido = 0;
-	private SituacaoBebinho situacao = SituacaoBebinho.NO_BAR;
+//	private SituacaoBebinho situacao = SituacaoBebinho.NO_BAR;
+	private SituacaoBebinho situacao = SituacaoBebinho.NA_FILA;//Teste
 	private Bar buteco;
 	private long id;
 	private boolean expulso;
@@ -40,6 +41,7 @@ public class Cliente extends Thread {
 			buteco.log(id + " acabou de chegar no bar");
 			n.acquire();
 			buteco.entrarButeco(this);
+			situacao = SituacaoBebinho.NO_BAR;//Teste
 			t1 = System.currentTimeMillis();
 			while (!expulso) {
 				t2 = System.currentTimeMillis();
@@ -130,13 +132,13 @@ public class Cliente extends Thread {
 	}
 
 	public void paint(Graphics2D g2, int i, int j) {
-		int a = 10 + 40 * i;
-		int b = 50 + 40 * j;
+		int a = 30 + 5 * i;//10
+		int b = 80 + 55 * j;//50
 		if (situacao == SituacaoBebinho.EM_CASA)
-			a += 500;
+			a += 540;
 		else if (situacao == SituacaoBebinho.NA_FILA)
-			a += 200;
+			a += 300;
 		g2.drawImage(frames[currframe], a, b, null);
-		g2.drawString("#" + id +" " + situacao.toString(), a - 20, b);
+		g2.drawString("#" + id +" " + situacao.toString(), a, b);
 	}
 }
